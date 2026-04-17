@@ -60,7 +60,7 @@ services:
   - type: web
     name: agentic-job-hunter-web
     runtime: docker
-    dockerfilePath: ./Dockerfile
+    dockerfilePath: 06-lab-complete/Dockerfile
     dockerContext: .
     plan: free
     region: oregon

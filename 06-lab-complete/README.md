@@ -35,6 +35,21 @@ OPENAI_API_KEY=replace-with-openai-api-key
 GEMINI_API_KEY=replace-with-gemini-api-key
 ```
 
+Generate `AGENT_API_KEY` yourself. It is the shared secret that this backend checks in the `X-API-Key` request header. It is not provided by Render, OpenAI, or Gemini.
+
+Example generation commands:
+
+```bash
+openssl rand -hex 32
+```
+
+or:
+
+```bash
+conda activate vinuni_ai
+python -c "import secrets; print(secrets.token_hex(32))"
+```
+
 Important variables:
 
 - `AGENT_API_KEY`: required on every protected request via the `X-API-Key` header
@@ -153,6 +168,12 @@ curl -X POST http://localhost/ask \
 - Docker Compose scaling works because the `app` service no longer uses a fixed container name.
 - Nginx balances traffic across `app` replicas using Docker's internal DNS resolver at `127.0.0.11`.
 - Redis is internal-only in the Compose network and is not exposed publicly.
+
+## Render Free Tier Note
+
+- The local Docker Compose stack includes `nginx + app replicas + redis`.
+- Render Free cannot run that same topology because private services are not available on Free, free web services cannot receive private-network traffic, and free web services cannot scale beyond one instance.
+- For assignment deployment on Render Free, use the included `render.yaml` fallback: one public FastAPI web service plus one free Render Key Value instance.
 
 ## Troubleshooting
 
