@@ -52,25 +52,25 @@ envVarGroups:
 services:
   - type: keyvalue
     name: agentic-job-hunter-redis
-    plan: starter
+    plan: free
     region: oregon
     ipAllowList: []
     maxmemoryPolicy: noeviction
 
-  - type: pserv
-    name: agentic-job-hunter-app
+  - type: web
+    name: agentic-job-hunter-web
     runtime: docker
     dockerfilePath: ./Dockerfile
     dockerContext: .
-    plan: starter
+    plan: free
     region: oregon
-    numInstances: 2
     autoDeployTrigger: commit
+    healthCheckPath: /ready
     maxShutdownDelaySeconds: 30
     envVars:
       - fromGroup: agentic-job-hunter-shared
       - key: PORT
-        value: "8000"
+        value: "10000"
       - key: REDIS_URL
         fromService:
           name: agentic-job-hunter-redis
@@ -82,28 +82,3 @@ services:
         sync: false
       - key: GEMINI_API_KEY
         sync: false
-
-  - type: web
-    name: agentic-job-hunter-proxy
-    runtime: docker
-    dockerfilePath: ./Dockerfile.nginx
-    dockerContext: .
-    plan: starter
-    region: oregon
-    numInstances: 2
-    autoDeployTrigger: commit
-    healthCheckPath: /ready
-    maxShutdownDelaySeconds: 30
-    envVars:
-      - key: PORT
-        value: "10000"
-      - key: AGENT_UPSTREAM_HOST
-        fromService:
-          name: agentic-job-hunter-app
-          type: pserv
-          envVarKey: RENDER_DISCOVERY_SERVICE
-      - key: AGENT_UPSTREAM_PORT
-        fromService:
-          name: agentic-job-hunter-app
-          type: pserv
-          property: port

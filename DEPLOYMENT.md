@@ -26,6 +26,8 @@ curl -X POST https://your-agent.railway.app/ask \
 - PORT
 - REDIS_URL
 - AGENT_API_KEY
+- OPENAI_API_KEY
+- GEMINI_API_KEY
 - LOG_LEVEL
 
 ## Screenshots
