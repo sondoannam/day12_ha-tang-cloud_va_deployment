@@ -14,6 +14,9 @@ services:
     runtime: python
     region: singapore         # Chọn region gần user nhất
     plan: free                # free | starter | standard | pro
+    ipAllowList:
+      - source: 0.0.0.0/0
+        description: allow-all
 
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
